@@ -7,10 +7,6 @@ define('DB_NAME', 'IAWDB');
 define('DB_USER', 'root');
 define('DB_PASS', 'Macedonia.12');
 
-//configuracion de las cookies
-define('COOKIE_PREF_NAME', 'gi_pref_theme');
-define('COOKIE_PREF_EXPIRE', time() + 60*60*24*30); 
-
 //URL del proyecto
 define('BASE_URL', 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6.git'); 
 
