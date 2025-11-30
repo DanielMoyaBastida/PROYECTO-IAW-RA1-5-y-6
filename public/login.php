@@ -2,6 +2,13 @@
 // public/login.php
 require_once DIR . '/../src/functions.php';
 $pdo = getPDO();
+// verifica la validez del tokemm csrf
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
+        set_flash('error','Token CSRF inválido');
+        header('Location: ' . BASE_URL . 'login.php');
+        exit;
+    }
 // maneja el inicio de sesión del usuario, con diferentes validaciones, 
 // como que no estén vacíos y comprueba la base de datos
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
