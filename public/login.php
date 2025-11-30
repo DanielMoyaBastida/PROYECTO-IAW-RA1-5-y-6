@@ -50,3 +50,19 @@ require_once __DIR__ . '/../templates/header.php';
 </form>
 <?php require_once __DIR__ . '/../templates/footer.php'; 
 ?>
+
+<h2>Login</h2>
+
+<form method="post">
+  <label>
+    Usuario
+    <input type="text" name="username">
+  </label>
+
+  <label>
+    Contraseña
+    <input type="password" name="password">
+  </label>
+
+  <button type="submit">Entrar</button>
+</form>

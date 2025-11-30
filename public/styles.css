@@ -1,0 +1,130 @@
+:root {
+  --bg: #f5f7fa;
+  --fg: #222;
+  --accent: #0a6;
+  --danger: #b00;
+  --card: #ffffff;
+  --border: #ddd;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 1rem;
+}
+
+/* ===== HEADER ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+}
+
+.nav a {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+/* ===== FLASH MENSAJES ===== */
+.success {
+  background: #e6ffee;
+  border: 1px solid #0b0;
+  color: #060;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.error {
+  background: #ffeaea;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== FORMULARIOS ===== */
+form {
+  background: var(--card);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+label {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+input[type="text"],
+input[type="password"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* ===== TABLAS ===== */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  margin-top: 1rem;
+}
+
+.table th,
+.table td {
+  border: 1px solid var(--border);
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.table th {
+  background: #f0f0f0;
+}
+
+/* ===== PAGINACIÓN ===== */
+.pager a {
+  margin-right: 0.4rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+}
