@@ -27,7 +27,6 @@ require_once __DIR__ . '/../templates/header.php';
 <p><strong>Descripción:</strong> <?= nl2br(e($ticket['description'])) ?></p>
 <p><strong>Prioridad:</strong> <?= e($ticket['priority']) ?></p>
 <p><strong>Estado:</strong> <?= e($ticket['status']) ?></p>
-<p><strong>Creada:</strong> <?= e($ticket['created_at']) ?></p>
 <p>
   <a href="<?= BASE_URL ?>tickets/edit.php?id=<?= e((string)$ticket['id']) ?>">Editar</a> |
   <a href="<?= BASE_URL ?>tickets/delete.php?id=<?= e((string)$ticket['id']) ?>" onclick="return confirm('¿Borrar?')">Borrar</a>
