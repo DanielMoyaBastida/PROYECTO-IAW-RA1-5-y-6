@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //verificamos el CSRF
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
         set_flash('error','Token CSRF inválido');
-        header('Location: ' . BASE_URL . 'tickets/create.php');
+        header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/src/functions.php' . 'tickets/create.php');
         exit;
     }
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$title,$description,$priority,$status]);
         $id = (int)$pdo->lastInsertId();
         set_flash('success','Incidencia creada');
-        header('Location: ' . BASE_URL . 'tickets/view.php?id=' . $id);
+        header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/view.php' . 'tickets/view.php?id=' . $id);
         exit;
     }
 }

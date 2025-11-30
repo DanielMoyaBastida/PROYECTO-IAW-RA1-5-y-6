@@ -13,7 +13,7 @@ $ticket = $stmt->fetch();
 //comprobamos que exista la incidencia
 if (!$ticket) {
     set_flash('error','Incidencia no encontrada');
-    header('Location: ' . BASE_URL . 'tickets/list.php');
+    header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/list.php' . 'tickets/list.php');
     exit;
 }
 
@@ -28,8 +28,8 @@ require_once __DIR__ . '/../templates/header.php';
 <p><strong>Prioridad:</strong> <?= e($ticket['priority']) ?></p>
 <p><strong>Estado:</strong> <?= e($ticket['status']) ?></p>
 <p>
-  <a href="<?= BASE_URL ?>tickets/edit.php?id=<?= e((string)$ticket['id']) ?>">Editar</a> |
-  <a href="<?= BASE_URL ?>tickets/delete.php?id=<?= e((string)$ticket['id']) ?>" onclick="return confirm('¿Borrar?')">Borrar</a>
+  <a href="<?= 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/edit.php' ?>tickets/edit.php?id=<?= e((string)$ticket['id']) ?>">Editar</a> |
+  <a href="<?= 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/delete.php' ?>tickets/delete.php?id=<?= e((string)$ticket['id']) ?>" onclick="return confirm('¿Borrar?')">Borrar</a>
 </p>
 
 <!-- pie de pagina -->
