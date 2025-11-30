@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //verificamos el CSRF
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
         set_flash('error','Token CSRF inválido');
-        header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/src/functions.php' . 'tickets/create.php');
+        header('Location: ../tickets/create.php');
         exit;
     }
 

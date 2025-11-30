@@ -8,7 +8,7 @@ $pdo = getPDO();
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) {
     set_flash('error','ID inválido');
-    header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/list.php' . 'tickets/list.php');
+    header('Location: ../list.php');
     exit;
 }
 

@@ -5,7 +5,7 @@ session_start();
 //Verifica si un usuario ha iniciado sesión. Si no es así, redirige al usuario a la página de inicio de sesión.
 function require_login(): void {
     if (!isset($_SESSION['user_id'])) {
-        header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/public/login.php' . 'login.php');
+        header('Location: ../login.php');
         exit;
     }
 }

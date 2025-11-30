@@ -1,6 +1,6 @@
 <?php
 //aqui se incluye el archivo functions uqe contiene las funciones
-require_once __DIR__ . '/../src/functions.php';
+require_once __DIR__ . '../src/functions.php';
 //obtiene la informacion del usuario logeado
 $user = current_user();
 ?><!doctype html>
@@ -36,11 +36,11 @@ body.theme-dark { --bg:#121212; --fg:#eaeaea; --accent:#6cf; }
     <div class="nav">
       <?php if ($user): ?>
         Hola, <?= e($user['username']) ?> |
-        <a href="<?= BASE_URL ?>tickets/list.php">Listado</a>
-        <a href="<?= BASE_URL ?>tickets/create.php">Crear</a>
-        <a href="<?= BASE_URL ?>logout.php">Logout</a>
+        <a href="<?= BASE_URL ?>../list.php">Listado</a>
+        <a href="<?= BASE_URL ?>../create.php">Crear</a>
+        <a href="<?= BASE_URL ?>../logout.php">Logout</a>
       <?php else: ?>
-        <a href="<?= BASE_URL ?>login.php">Login</a>
+        <a href="<?= BASE_URL ?>../login.php">Login</a>
       <?php endif; ?>
     </div>
   </div>

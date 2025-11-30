@@ -43,7 +43,7 @@ try {
     //confirmamos los cambios
     $pdo->commit();
     set_flash('success','Incidencia borrada correctamente (auditoría registrada).');
-    header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/list.php' . 'tickets/list.php');
+    header('Location: ../tickets/list.php');
     exit;
 } 
 catch (Exception $ex) {
@@ -52,6 +52,6 @@ catch (Exception $ex) {
     //y se registra el error en el log
     error_log('Error borrado: ' . $ex->getMessage());
     set_flash('error','Error al borrar (se ha revertido).');
-    header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/list.php' . 'tickets/list.php');
+    header('Location: ../tickets/list.php');
     exit;
 }
