@@ -45,7 +45,8 @@ try {
     set_flash('success','Incidencia borrada correctamente (auditoría registrada).');
     header('Location: ' . BASE_URL . 'tickets/list.php');
     exit;
-} catch (Exception $ex) {
+} 
+catch (Exception $ex) {
     //si hay algun error se revierte todo lo que hemos hecho
     if ($pdo->inTransaction()) $pdo->rollBack();
     //y se registra el error en el log
