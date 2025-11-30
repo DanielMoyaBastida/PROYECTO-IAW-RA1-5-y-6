@@ -1,10 +1,10 @@
 USE gestor_inc;
 
-INSERT INTO usuarios (nombre_usuario, contrasena, password_hash) VALUES
-('root', '1234', '$2y$10$EXAMPLEHASHyourswitchthis');
+INSERT INTO users (username, password_hash) VALUES
+('root', '$2y$10$J0swe');
 
 -- Generar 50 tickets de ejemplo
-INSERT INTO tickets (nombre_ticket, descripcion, prioridad, estado) VALUES
+INSERT INTO tickets (title, description, priority, status) VALUES
 ('Incidencia 1','Descripcion ejemplo 1','low','abierta'),
 ('Incidencia 2','Descripcion ejemplo 2','medium','abierta'),
 ('Incidencia 3','Descripcion ejemplo 3','high','cerrada'),
