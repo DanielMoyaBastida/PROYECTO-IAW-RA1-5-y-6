@@ -7,9 +7,6 @@ define('DB_NAME', 'gestor_inc');
 define('DB_USER', 'root');
 define('DB_PASS', 'Macedonia.12');
 
-// URL del proyecto
-define('http://localhost/proyecto_gestor/'); 
-
 // Función para obtener la conexión a la base de datos
 function getPDO(): PDO {
     static $pdo = null;

@@ -118,7 +118,7 @@ require_once __DIR__ . '/../templates/header.php';
   </label><br><br>
 
   <button type="submit">Guardar Cambios</button> 
-  <a href="<?= /../list.php ?>tickets/list.php" style="margin-left: 10px;">Cancelar</a>
+  <a href="tickets/list.php" style="margin-left: 10px;">Cancelar</a>
 </form>
 
 <?php require_once __DIR__ . '/../templates/footer.php'; ?>

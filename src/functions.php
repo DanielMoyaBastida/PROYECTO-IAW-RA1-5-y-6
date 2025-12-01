@@ -1,6 +1,6 @@
 <?php
 // Asegúrate de que config.php está en la misma carpeta o ajusta la ruta
-require_once '/config.php'; 
+require_once __DIR__ .  '/config.php'; 
 
 // Iniciar sesión si no está iniciada ya
 if (session_status() === PHP_SESSION_NONE) {

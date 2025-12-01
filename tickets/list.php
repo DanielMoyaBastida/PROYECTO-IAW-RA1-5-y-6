@@ -1,6 +1,6 @@
 <?php
 // Cargamos funciones, verificamos el usuario y obtenemos la conexión
-require_once '/../src/functions.php';
+require_once __DIR__ . '/../src/functions.php';
 require_login();
 $pdo = getPDO();
 

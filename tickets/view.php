@@ -1,6 +1,6 @@
 <?php
 // Cargamos funciones, verificamos usuario y obtenemos la conexión
-require_once __DIR__'/../src/functions.php';
+require_once __DIR__ . '/../src/functions.php';
 require_login();
 $pdo = getPDO();
 
@@ -24,7 +24,7 @@ if (!$tickets) {
 }
 
 // Cabecera HTML
-require_once __DIR__'/../templates/header.php';
+require_once __DIR__ . '/../templates/header.php';
 ?>
 
 <h2>Incidencia #<?= e((string)$tickets['id']) ?></h2>
@@ -44,13 +44,13 @@ require_once __DIR__'/../templates/header.php';
 <hr>
 
 <p>
-  <a href="<?= /../edit?>tickets/edit.php?id=<?= e((string)$tickets['id']) ?>">Editar</a> | 
+  <a href="tickets/edit.php?id=<?= e((string)$tickets['id']) ?>">Editar</a> | 
 
-  <a href="<?= /../delete ?>tickets/delete.php?id=<?= e((string)$tickets['id']) ?>" 
+  <a href="ickets/delete.php?id=<?= e((string)$tickets['id']) ?>" 
      onclick="return confirm('¿Estás seguro de que quieres borrar esta tickets?');"
      style="color: red;">Borrar</a> |
 
-  <a href="<?= /../list?>tickets/list.php">Volver al listado</a>
+  <a href="tickets/list.php">Volver al listado</a>
 </p>
 
-<?php require_once __DIR__'/../templates/footer.php'; ?>
+<?php require_once __DIR__ .'/../templates/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php
-require_once '/src/config.php'; // Cargamos config para tener BASE_URL
+require_once __DIR__ . '/src/config.php'; // Cargamos config para tener BASE_URL
 
 session_start();
 // Destruimos todas las variables de sesión

@@ -1,5 +1,5 @@
 <?php
-require_once  '/../src/functions.php';
+require_once __DIR__ .  '/../src/functions.php';
 $pdo = getPDO();
 
 // Verifica la validez del token CSRF
