@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Genera el formulario de inicio de sesión
-require_once  '/../templates/header.php';
+require_once  __DIR__ .'/../templates/header.php';
 ?>
 <h2>Iniciar Sesión</h2>
 
