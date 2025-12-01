@@ -1,6 +1,6 @@
 <?php
 // Asegúrate de que config.php está en la misma carpeta o ajusta la ruta
-require_once __DIR__ '/config.php'; 
+require_once '/config.php'; 
 
 // Iniciar sesión si no está iniciada ya
 if (session_status() === PHP_SESSION_NONE) {
@@ -47,18 +47,20 @@ function current_user(): ?array {
 
     $u = $stmt->fetch();
     return $u ?: null;
-    
+  }
 //función de paginación
-@param int $page Página actual
-@param int $perPage Registros por página
-@param int $total Total de registros
-@return array Datos calculados*/
+/**
+* @param int $page
+* @param int $perPage
+* @param int $total
+* @return array
+*/
 function paginate(int $page, int $perPage, int $total): array {
     $totalPages = (int)ceil($total / $perPage);
     $page = max(1, min($page, $totalPages)); // Asegura que la página sea válida
     $offset = ($page - 1) * $perPage;
 
-    / Si total es 0, totalPages será 0, evitamos división por cero o errores visuales */
+
     if ($total === 0) {
         $totalPages = 1; 
         $page = 1;
@@ -73,5 +75,5 @@ function paginate(int $page, int $perPage, int $total): array {
         'offset' => $offset
     ];
 }
-}
+
 ?>

@@ -1,6 +1,6 @@
 <?php
 // Cargamos funciones, verificamos el usuario y obtenemos la conexión
-require_once __DIR__ . '/../src/functions.php';
+require_once '/../src/functions.php';
 require_login();
 $pdo = getPDO();
 
@@ -39,7 +39,7 @@ if ($q !== '') {
 }
 $rows = $stmt->fetchAll();
 // Cabecera HTML
-require_once __DIR__ . '/../templates/header.php';
+require_once '/../templates/header.php';
 ?>
 
 <h2>Listado de tickets</h2>
@@ -50,7 +50,7 @@ require_once __DIR__ . '/../templates/header.php';
 </form>
 <br>
 
-<a href="<?=/../create.php ?>tickets/create.php">
+<a href="tickets/create.php">
     <button>+ Nueva Incidencia</button>
 </a>
 
@@ -73,9 +73,9 @@ require_once __DIR__ . '/../templates/header.php';
             <td><?= e($r['prioridad']) ?></td>
             <td><?= e($r['estado']) ?></td>
             <td>
-                <a href="<?= /../view.php ?>tickets/view.php?id=<?= e((string)$r['id']) ?>">Ver</a> |
-                <a href="<?= /../edit.php ?>tickets/edit.php?id=<?= e((string)$r['id']) ?>">Editar</a> |
-                <a href="<?= /../delete.php ?>tickets/delete.php?id=<?= e((string)$r['id']) ?>" 
+                <a href="tickets/view.php?id=<?= e((string)$r['id']) ?>">Ver</a> |
+                <a href="tickets/edit.php?id=<?= e((string)$r['id']) ?>">Editar</a> |
+                <a href="tickets/delete.php?id=<?= e((string)$r['id']) ?>" 
                    onclick="return confirm('¿Estás seguro de borrar esta incidencia?');">Borrar</a>
             </td>
         </tr>

@@ -25,6 +25,6 @@ CREATE TABLE IF NOT EXISTS registros_auditoria (
   CONSTRAINT fk_auditoria_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 );
 
-CREATE INDEX idx_incidencias_titulo ON incidencias(titulo); 
-CREATE INDEX idx_incidencias_prioridad ON incidencias(prioridad);
-CREATE INDEX idx_incidencias_estado ON incidencias(estado);
+CREATE INDEX idx_tickets_titulo ON tickets(titulo); 
+CREATE INDEX idx_tickets_prioridad ON tickets(prioridad);
+CREATE INDEX idx_tickets_estado ON tickets(estado);

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ '/../src/functions.php';
+require_once  '/../src/functions.php';
 $pdo = getPDO();
 
 // Verifica la validez del token CSRF
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Genera el formulario de inicio de sesión
-require_once __DIR__ '/../templates/header.php';
+require_once  '/../templates/header.php';
 ?>
 <h2>Iniciar Sesión</h2>
 
@@ -69,4 +69,4 @@ require_once __DIR__ '/../templates/header.php';
   <button type="submit">Entrar</button>
 </form>
 
-<?php require_once __DIR__ '/../templates/footer.php'; ?>
+<?php require_once  '/../templates/footer.php'; ?>
