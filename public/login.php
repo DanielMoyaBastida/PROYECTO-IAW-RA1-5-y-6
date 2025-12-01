@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Genera el formulario de inicio de sesión
 require_once  __DIR__ .'/../templates/header.php';
 ?>
+<html>
 <h2>Iniciar Sesión</h2>
 
 <form method="post" action="">
@@ -65,5 +66,5 @@ require_once  __DIR__ .'/../templates/header.php';
 
   <button type="submit">Entrar</button>
 </form>
-
+</html>
 <?php require_once  '/../templates/footer.php'; ?>
