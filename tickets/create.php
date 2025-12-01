@@ -1,80 +1,50 @@
 <?php
-//añadimos informacion de otro fichero
-require_once __DIR__ . '/../src/functions.php';
+// Añadimos información de otro fichero
+require_once __DIR__ '/../src/functions.php';
 require_login();
 $pdo = getPDO();
 
-//array para almacenar errores
+// Array para almacenar errores
 $errors = [];
-$old = ['title'=>'','description'=>'','priority'=>'medium','status'=>'abierta'];
+// Valores por defecto
+$old = ['titulo' => '', 'descripcion' => '', 'prioridad' => 'media', 'estado' => 'abierta'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    //verificamos el CSRF
+    // Verificamos el CSRF
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
-        set_flash('error','Token CSRF inválido');
+        set_flash('error', 'Token CSRF inválido');
+        // Redirección interna correcta
         header('Location: ../tickets/create.php');
         exit;
     }
+// Recogemos los datos del formulario
+    $titulo = trim($_POST['titulo'] ?? '');
+    $descripcion = trim($_POST['descripcion'] ?? '');
+    $prioridad = $_POST['prioridad'] ?? 'media';
+    $estado = $_POST['estado'] ?? 'abierta';
 
-    //recogemos los datos del formulario
+    // Guardamos para repoblar el formulario si falla
+    $old = compact('titulo', 'descripcion', 'prioridad', 'estado');
 
-    $title = trim($_POST['title'] ?? '');
-    $description = trim($_POST['description'] ?? '');
-    $priority = $_POST['priority'] ?? 'medium';
-    $status = $_POST['status'] ?? 'abierta';
+    // Validamos los datos
+    if ($titulo === '') $errors['titulo'] = 'El título es obligatorio';
+    if ($descripcion === '') $errors['descripcion'] = 'La descripción es obligatoria';
 
-    $old = compact('title','description','priority','status');
+    // Validación de ENUMs
+    if (!in_array($prioridad, ['baja', 'media', 'alta'])) $errors['prioridad'] = 'Prioridad inválida';
+    if (!in_array($estado, ['abierta', 'cerrada'])) $errors['estado'] = 'Estado inválido';
 
-    //validamos los datos
-    if ($title === '') $errors['title'] = 'El título es obligatorio';
-    if ($description === '') $errors['description'] = 'La descripción es obligatoria';
-    if (!in_array($priority, ['low','medium','high'])) $errors['priority'] = 'Prioridad inválida';
-    if (!in_array($status, ['abierta','cerrada'])) $errors['status'] = 'Estado inválido';
-
-    //se guarda en la base de datos si no hay errores
+    // Se guarda en la base de datos si no hay errores
     if (empty($errors)) {
-        $stmt = $pdo->prepare("INSERT INTO tickets (title,description,priority,status,created_at) VALUES (?,?,?,?,NOW())");
-        $stmt->execute([$title,$description,$priority,$status]);
+        $stmt = $pdo->prepare("INSERT INTO tickets (titulo, descripcion, prioridad, estado) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$titulo, $descripcion, $prioridad, $estado]);
+
         $id = (int)$pdo->lastInsertId();
-        set_flash('success','Incidencia creada');
-        header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/view.php' . 'tickets/view.php?id=' . $id);
+
+        set_flash('success', 'Incidencia creada correctamente');
+        // Redirección a la vista de la nueva incidencia
+        header('Location: ../view.php?id=' . $id);
         exit;
     }
 }
-
-require_once __DIR__ . '/../templates/header.php';
-?>
-
-<!-- mostramos el formulario y generamos el token csrf -->
-<h2>Crear incidencia</h2>
-<form method="post" action="">
-  <?= csrf_field() ?>
-
-  <label>Título<br>
-<!-- mostramos si hay errores -->
-    <input type="text" name="title" value="<?= e($old['title']) ?>">
-    <?php if(isset($errors['title'])): ?><div class="error"><?= e($errors['title']) ?></div><?php endif; ?>
-
-  </label><br>
-  <label>Descripción<br>
-    <textarea name="description"><?= e($old['description']) ?></textarea>
-    <?php if(isset($errors['description'])): ?><div class="error"><?= e($errors['description']) ?></div><?php endif; ?>
-  </label><br>
-  <label>Prioridad
-    <select name="priority">
-      <option value="low" <?= $old['priority'] === 'low' ? 'selected' : '' ?>>Baja</option>
-      <option value="medium" <?= $old['priority'] === 'medium' ? 'selected' : '' ?>>Media</option>
-      <option value="high" <?= $old['priority'] === 'high' ? 'selected' : '' ?>>Alta</option>
-    </select>
-  </label><br>
-  <label>Estado
-    <select name="status">
-      <option value="abierta" <?= $old['status'] === 'abierta' ? 'selected' : '' ?>>Abierta</option>
-      <option value="cerrada" <?= $old['status'] === 'cerrada' ? 'selected' : '' ?>>Cerrada</option>
-    </select>
-  </label><br><br>
-  <button type="submit">Guardar</button>
-</form>
-
-<?php require_once __DIR__ . '/../templates/footer.php'; ?>

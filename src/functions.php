@@ -1,37 +1,77 @@
 <?php
-// inicia aplicación y sesión
-require_once DIR . '/config.php';
-session_start();
-//Verifica si un usuario ha iniciado sesión. Si no es así, redirige al usuario a la página de inicio de sesión.
+// Asegúrate de que config.php está en la misma carpeta o ajusta la ruta
+require_once __DIR__ '/config.php'; 
+
+// Iniciar sesión si no está iniciada ya
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+//Verifica si un usuario ha iniciado sesión.
+//Si no es así, redirige al usuario a la página de inicio de sesión.
 function require_login(): void {
-    if (!isset($_SESSION['user_id'])) {
+  
+    if (!isset($_SESSION['id_usuario'])) {
+        // Usamos BASE_URL para una redirección más segura
         header('Location: ../login.php');
         exit;
     }
 }
-//Generamos el token csrf
+
+//Generamos el token CSRF
 function csrf_token(): string {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
     return $_SESSION['csrf_token'];
 }
-//Generamos un campo oculto para poder insertar el token en el formulario
+
+//Generamos un campo oculto para insertar el token en el formulario
 function csrf_field(): string {
-    return '<input type="hidden" name="csrf_token" value="'.e(csrf_token()).'">';
+    return '<input type="hidden" name="csrf_token" value="' . e(csrf_token()) . '">';
 }
-//Verficamos si el token de la petición coincide con el del usuario que la hace
+
+//Verificamos si el token de la petición coincide con el de la sesión
 function verify_csrf_token(?string $token): bool {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], (string)$token);
 }
 
-// Función para comprobar la información del usuario
+//Obtiene la información del usuario actual desde la base de datos
 function current_user(): ?array {
-    if (empty($_SESSION['user_id'])) return null;
+    if (empty($_SESSION['id_usuario'])) return null;
+
     $pdo = getPDO();
-    $stmt = $pdo->prepare("SELECT id, username FROM users WHERE id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
+
+    $stmt = $pdo->prepare("SELECT id, nombre_usuario FROM usuarios WHERE id = ?");
+    $stmt->execute([$_SESSION['id_usuario']]);
+
     $u = $stmt->fetch();
     return $u ?: null;
+    
+//función de paginación
+@param int $page Página actual
+@param int $perPage Registros por página
+@param int $total Total de registros
+@return array Datos calculados*/
+function paginate(int $page, int $perPage, int $total): array {
+    $totalPages = (int)ceil($total / $perPage);
+    $page = max(1, min($page, $totalPages)); // Asegura que la página sea válida
+    $offset = ($page - 1) * $perPage;
+
+    / Si total es 0, totalPages será 0, evitamos división por cero o errores visuales */
+    if ($total === 0) {
+        $totalPages = 1; 
+        $page = 1;
+        $offset = 0;
+    }
+
+    return [
+        'page' => $page,
+        'perPage' => $perPage,
+        'total' => $total,
+        'totalPages' => $totalPages,
+        'offset' => $offset
+    ];
+}
 }
 ?>

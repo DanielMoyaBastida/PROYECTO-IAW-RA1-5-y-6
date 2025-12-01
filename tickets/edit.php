@@ -1,98 +1,124 @@
 <?php
-//cargamos las funciones, verificamos el usuario y obtenemos la conexion a la base de datos
+// Cargamos las funciones, verificamos el usuario y obtenemos la conexión
 require_once __DIR__ . '/../src/functions.php';
 require_login();
 $pdo = getPDO();
 
-//recogemos la ID de la incidencia desde URL y validamos que sea correcto
+// Recogemos la ID de la tickets desde URL y validamos que sea correcta
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) {
-    set_flash('error','ID inválido');
+    set_flash('error', 'ID inválido');
     header('Location: ../list.php');
     exit;
 }
 
-//consultamos la incidencia para mostrar los datos del formulario
+// Consultamos la tickets para mostrar los datos actuales
 $stmt = $pdo->prepare("SELECT * FROM tickets WHERE id = ?");
 $stmt->execute([$id]);
-$ticket = $stmt->fetch();
+$tickets = $stmt->fetch();
 
-//si no existe se notifica y se redirige
-if (!$ticket) {
-    set_flash('error','Incidencia no encontrada');
-    header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/list.php' . 'tickets/list.php');
+// Si no existe se notifica y se redirige
+if (!$tickets) {
+    set_flash('error', 'incidencia no encontrada');
+    header('Location:../list.php');
     exit;
 }
 
-//arrays para almacenar errores
+// Arrays para almacenar errores
 $errors = [];
-$old = $ticket;
+// Usamos los datos de la base de datos como valores iniciales
+$old = $tickets;
 
-//se mira si el formulario a sido enviado y se verifica el tokem CSRF
+// Se mira si el formulario ha sido enviado y se verifica el token CSRF
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
-        set_flash('error','Token CSRF inválido');
-        header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/edit.php' . 'tickets/edit.php?id=' . $id);
+        set_flash('error', 'Token CSRF inválido');
+        // Redirigir a la misma página para evitar bucles raros
+        header('Location:../edit.php?id=' . $id);
         exit;
     }
 
-    //recogemos los datos enviador por el usuario
-    $title = trim($_POST['title'] ?? '');
-    $description = trim($_POST['description'] ?? '');
-    $priority = $_POST['priority'] ?? 'medium';
-    $status = $_POST['status'] ?? 'abierta';
+    // Recogemos los datos enviados por el usuario
+    $titulo = trim($_POST['titulo'] ?? '');
+    $descripcion = trim($_POST['descripcion'] ?? '');
+    $prioridad = $_POST['prioridad'] ?? 'media';
+    $estado = $_POST['estado'] ?? 'abierta';
 
-    //los guardamos para recargarlo si hay errores y validamos los campos
-    $old = compact('id','title','description','priority','status');
-    if ($title === '') $errors['title'] = 'El título es obligatorio';
-    if ($description === '') $errors['description'] = 'La descripción es obligatoria';
-    if (!in_array($priority, ['low','medium','high'])) $errors['priority'] = 'Prioridad inválida';
-    if (!in_array($status, ['abierta','cerrada'])) $errors['status'] = 'Estado inválido';
+    // Los guardamos en $old por si hay errores y hay que volver a mostrar el formulario
+    $old = [
+        'id' => $id,
+        'titulo' => $titulo,
+        'descripcion' => $descripcion,
+        'prioridad' => $prioridad,
+        'estado' => $estado
+    ];
 
-    //si no hay errores se actualiza la incidencia
+    // Validaciones
+    if ($titulo === '') $errors['titulo'] = 'El título es obligatorio';
+    if ($descripcion === '') $errors['descripcion'] = 'La descripción es obligatoria';
+    
+    // CAMBIO: Validación de ENUMs
+    if (!in_array($prioridad, ['baja', 'media', 'alta'])) $errors['prioridad'] = 'Prioridad inválida';
+    if (!in_array($estado, ['abierta', 'cerrada'])) $errors['estado'] = 'Estado inválido';
+
+    // Si no hay errores se actualiza la tickets
     if (empty($errors)) {
-        $stmt = $pdo->prepare("UPDATE tickets SET title = ?, description = ?, priority = ?, status = ? WHERE id = ?");
-        $stmt->execute([$title,$description,$priority,$status,$id]);
-        set_flash('success','Incidencia actualizada');
-        header('Location: ' . 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/view.php' . 'tickets/view.php?id=' . $id);
+        $stmt = $pdo->prepare("UPDATE tickets SET titulo = ?, descripcion = ?, prioridad = ?, estado = ? WHERE id = ?");
+        $stmt->execute([$titulo, $descripcion, $prioridad, $estado, $id]);
+        
+        set_flash('success', 'tickets actualizada correctamente');
+        // Redirigir a la vista de detalle
+        header('Location: ../view.php?id=' . $id);
         exit;
     }
 }
 
-//cabecera HTML
+// Cabecera HTML
 require_once __DIR__ . '/../templates/header.php';
 ?>
 
-<!-- formulario para editar la incidencia -->
-<h2>Editar incidencia #<?= e((string)$id) ?></h2>
+<h2>Editar tickets #<?= e((string)$id) ?></h2>
+
 <form method="post" action="">
   <?= csrf_field() ?>
 
   <label>Título<br>
-    <input type="text" name="title" value="<?= e($old['title']) ?>">
-    <?php if(isset($errors['title'])): ?><div class="error"><?= e($errors['title']) ?></div><?php endif; ?>
-  </label><br>
+    <input type="text" name="titulo" value="<?= e($old['titulo']) ?>" style="width: 100%; max-width: 400px;">
+    <?php if(isset($errors['titulo'])): ?>
+        <div class="error" style="color: red;"><?= e($errors['titulo']) ?></div>
+    <?php endif; ?>
+  </label><br><br>
 
   <label>Descripción<br>
-    <textarea name="description"><?= e($old['description']) ?></textarea>
-    <?php if(isset($errors['description'])): ?><div class="error"><?= e($errors['description']) ?></div><?php endif; ?>
-  </label><br>
-
-  <label>Prioridad
-    <select name="priority">
-      <option value="low" <?= $old['priority'] === 'low' ? 'selected' : '' ?>>Baja</option>
-      <option value="medium" <?= $old['priority'] === 'medium' ? 'selected' : '' ?>>Media</option>
-      <option value="high" <?= $old['priority'] === 'high' ? 'selected' : '' ?>>Alta</option>
-    </select>
-  </label><br>
-
-  <label>Estado
-    <select name="status">
-      <option value="abierta" <?= $old['status'] === 'abierta' ? 'selected' : '' ?>>Abierta</option>
-      <option value="cerrada" <?= $old['status'] === 'cerrada' ? 'selected' : '' ?>>Cerrada</option>
-    </select>
+    <textarea name="descripcion" rows="5" style="width: 100%; max-width: 400px;"><?= e($old['descripcion']) ?></textarea>
+    <?php if(isset($errors['descripcion'])): ?>
+        <div class="error" style="color: red;"><?= e($errors['descripcion']) ?></div>
+    <?php endif; ?>
   </label><br><br>
-  <button type="submit">Guardar</button>
+
+  <label>Prioridad<br>
+    <select name="prioridad">
+      <option value="baja" <?= $old['prioridad'] === 'baja' ? 'selected' : '' ?>>Baja</option>
+      <option value="media" <?= $old['prioridad'] === 'media' ? 'selected' : '' ?>>Media</option>
+      <option value="alta" <?= $old['prioridad'] === 'alta' ? 'selected' : '' ?>>Alta</option>
+    </select>
+    <?php if(isset($errors['prioridad'])): ?>
+        <div class="error" style="color: red;"><?= e($errors['prioridad']) ?></div>
+    <?php endif; ?>
+  </label><br><br>
+
+  <label>Estado<br>
+    <select name="estado">
+      <option value="abierta" <?= $old['estado'] === 'abierta' ? 'selected' : '' ?>>Abierta</option>
+      <option value="cerrada" <?= $old['estado'] === 'cerrada' ? 'selected' : '' ?>>Cerrada</option>
+    </select>
+    <?php if(isset($errors['estado'])): ?>
+        <div class="error" style="color: red;"><?= e($errors['estado']) ?></div>
+    <?php endif; ?>
+  </label><br><br>
+
+  <button type="submit">Guardar Cambios</button> 
+  <a href="<?= /../list.php ?>tickets/list.php" style="margin-left: 10px;">Cancelar</a>
 </form>
 
 <?php require_once __DIR__ . '/../templates/footer.php'; ?>

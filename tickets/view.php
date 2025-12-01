@@ -1,36 +1,56 @@
 <?php
-//cargamos funciones verificamos usuario y obtenemos la conexion con la base de datos
-require_once __DIR__ . '/../src/functions.php';
+// Cargamos funciones, verificamos usuario y obtenemos la conexión
+require_once __DIR__'/../src/functions.php';
 require_login();
 $pdo = getPDO();
 
-//recogemos la ID de la incidencia
+// Recogemos la ID de la tickets
 $id = (int)($_GET['id'] ?? 0);
+
+// CAMBIO: Tabla 'tickets' -> 'tickets'
 $stmt = $pdo->prepare("SELECT * FROM tickets WHERE id = ?");
 $stmt->execute([$id]);
-$ticket = $stmt->fetch();
+$tickets = $stmt->fetch();
 
-//comprobamos que exista la incidencia
-if (!$ticket) {
-    set_flash('error','Incidencia no encontrada');
-    header('Location: ../tickets/list.php');
+// Comprobamos que exista la tickets
+if (!$tickets) {
+    if (function_exists('set_flash')) {
+        set_flash('error', 'Incidencia no encontrada');
+    }
+
+    // Redirección usando BASE_URL para evitar errores de ruta
+    header('Location: ../list.php');
     exit;
 }
 
-//cabecera HTML
-require_once __DIR__ . '/../templates/header.php';
+// Cabecera HTML
+require_once __DIR__'/../templates/header.php';
 ?>
 
-<!-- mostramos los detalles del tiket y las acciones disponibles -->
-<h2>Incidencia #<?= e((string)$ticket['id']) ?></h2>
-<p><strong>Título:</strong> <?= e($ticket['title']) ?></p>
-<p><strong>Descripción:</strong> <?= nl2br(e($ticket['description'])) ?></p>
-<p><strong>Prioridad:</strong> <?= e($ticket['priority']) ?></p>
-<p><strong>Estado:</strong> <?= e($ticket['status']) ?></p>
+<h2>Incidencia #<?= e((string)$tickets['id']) ?></h2>
+
+<div class="tickets-detalle">
+    <p><strong>Título:</strong> <br> <?= e($tickets['titulo']) ?></p>
+
+    <p><strong>Descripción:</strong> <br> 
+    <?= nl2br(e($tickets['descripcion'])) ?>
+    </p>
+
+    <p><strong>Prioridad:</strong> <?= e($tickets['prioridad']) ?></p>
+
+    <p><strong>Estado:</strong> <?= e($tickets['estado']) ?></p>
+</div>
+
+<hr>
+
 <p>
-  <a href="<?= 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/edit.php' ?>tickets/edit.php?id=<?= e((string)$ticket['id']) ?>">Editar</a> |
-  <a href="<?= 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/delete.php' ?>tickets/delete.php?id=<?= e((string)$ticket['id']) ?>" onclick="return confirm('¿Borrar?')">Borrar</a>
+  <a href="<?= /../edit?>tickets/edit.php?id=<?= e((string)$tickets['id']) ?>">Editar</a> | 
+
+  <a href="<?= /../delete ?>tickets/delete.php?id=<?= e((string)$tickets['id']) ?>" 
+     onclick="return confirm('¿Estás seguro de que quieres borrar esta tickets?');"
+     style="color: red;">Borrar</a> |
+
+  <a href="<?= /../list?>tickets/list.php">Volver al listado</a>
 </p>
 
-<!-- pie de pagina -->
-<?php require_once __DIR__ . '/../templates/footer.php'; ?>
+<?php require_once __DIR__'/../templates/footer.php'; ?>

@@ -1,30 +1,30 @@
 CREATE DATABASE IF NOT EXISTS gestor_inc;
 USE gestor_inc;
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(100) NOT NULL UNIQUE,
-  password_hash VARCHAR(255) NOT NULL
+  nombre_usuario VARCHAR(100) NOT NULL UNIQUE,
+  hash_contrasena VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS tickets (
-id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  description TEXT NOT NULL,
-  priority ENUM('low','medium','high') NOT NULL DEFAULT 'medium',
-  status ENUM('abierta','cerrada') NOT NULL DEFAULT 'abierta'
-);
-
-CREATE TABLE IF NOT EXISTS audit_logs (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  action VARCHAR(50) NOT NULL,
-  entity VARCHAR(50) NOT NULL,
-  entity_id INT,
-  user_id INT,
-  details JSON,
-  FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+  titulo VARCHAR(255) NOT NULL,
+  descripcion TEXT NOT NULL,
+  prioridad ENUM('baja','media','alta') NOT NULL DEFAULT 'media',
+  estado ENUM('abierta','cerrada') NOT NULL DEFAULT 'abierta'
 );
 
- CREATE INDEX idx_tickets_nombre ON tickets(title); 
- CREATE INDEX idx_tickets_prioridad ON tickets(priority);
- CREATE INDEX idx_ticket_estado ON tickets(status);
+CREATE TABLE IF NOT EXISTS registros_auditoria (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  accion VARCHAR(50) NOT NULL,
+  entidad VARCHAR(50) NOT NULL,
+  id_entidad INT,
+  id_usuario INT,
+  detalles JSON,
+  CONSTRAINT fk_auditoria_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+);
+
+CREATE INDEX idx_incidencias_titulo ON incidencias(titulo); 
+CREATE INDEX idx_incidencias_prioridad ON incidencias(prioridad);
+CREATE INDEX idx_incidencias_estado ON incidencias(estado);

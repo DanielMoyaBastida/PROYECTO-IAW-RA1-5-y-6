@@ -1,81 +1,102 @@
 <?php
-//cargamos funciones verificamos el usuario y obtenemosl a conexion a la base de datos
+// Cargamos funciones, verificamos el usuario y obtenemos la conexión
 require_once __DIR__ . '/../src/functions.php';
 require_login();
 $pdo = getPDO();
 
-//recogemos la ID de la incidencia por URL y validamos que sea correcto
+// Recogemos la búsqueda y validamos la paginación
 $q = trim($_GET['q'] ?? '');
 $page = max(1, (int)($_GET['page'] ?? 1));
 $perPage = 10;
 
-//contamos el total de incidencias
+// 1. Contamos el total de tickets (Tabla: tickets)
 if ($q !== '') {
     $like = '%' . $q . '%';
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM tickets WHERE title LIKE ? OR description LIKE ?");
-    $stmt->execute([$like,$like]);
+    // Buscamos por 'titulo' o 'descripcion'
+    $stmt = $pdo->prepare("SELECT COUNT() FROM tickets WHERE titulo LIKE ? OR descripcion LIKE ?");
+    $stmt->execute([$like, $like]);
 } else {
-    $stmt = $pdo->query("SELECT COUNT(*) FROM tickets");
+    $stmt = $pdo->query("SELECT COUNT() FROM tickets");
 }
 $total = (int)$stmt->fetchColumn();
+
+// Calculamos el offset para la paginación
 $pager = paginate($page, $perPage, $total);
 
-//obtenemos los tickets segun la pagina
+// 2. Obtenemos los registros (Tabla: tickets)
 if ($q !== '') {
-    $stmt = $pdo->prepare("SELECT * FROM tickets WHERE title LIKE ? OR description LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?");
-    $stmt->execute([$like,$like,$pager['perPage'],$pager['offset']]);
+    $stmt = $pdo->prepare("SELECT * FROM tickets WHERE titulo LIKE ? OR descripcion LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?");
+    $stmt->bindValue(1, $like);
+    $stmt->bindValue(2, $like);
+    $stmt->bindValue(3, $pager['perPage'], PDO::PARAM_INT);
+    $stmt->bindValue(4, $pager['offset'], PDO::PARAM_INT);
+    $stmt->execute();
 } else {
     $stmt = $pdo->prepare("SELECT * FROM tickets ORDER BY id DESC LIMIT ? OFFSET ?");
-    $stmt->execute([$pager['perPage'],$pager['offset']]);
+    $stmt->bindValue(1, $pager['perPage'], PDO::PARAM_INT);
+    $stmt->bindValue(2, $pager['offset'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 $rows = $stmt->fetchAll();
-
-//cabezera HTML
+// Cabecera HTML
 require_once __DIR__ . '/../templates/header.php';
 ?>
 
-<h2>Listado de Incidencias</h2>
-<!-- formulario de busqueda -->
+<h2>Listado de tickets</h2>
+
 <form method="get" action="">
   <input type="text" name="q" placeholder="Buscar..." value="<?= e($q) ?>">
   <button type="submit">Buscar</button>
 </form>
+<br>
 
-<!-- tabla de resultados -->
-<table class="table" role="table">
-<thead><tr><th>ID</th><th>Título</th><th>Prioridad</th><th>Estado</th><th>Acciones</th></tr></thead>
-<tbody>
-<?php foreach($rows as $r): ?>
-<tr>
-  <td><?= e((string)$r['id']) ?></td>
-  <td><?= e($r['title']) ?></td>
-  <td><?= e($r['priority']) ?></td>
-  <td><?= e($r['status']) ?></td>
-  <td>
-    <a href="<?= 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/view.php' ?>tickets/view.php?id=<?= e((string)$r['id']) ?>">Ver</a> |
-    <a href="<?= 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/edit.php' ?>tickets/edit.php?id=<?= e((string)$r['id']) ?>">Editar</a> |
-    <a href="<?= 'https://github.com/DanielMoyaBastida/PROYECTO-IAW-RA1-5-y-6/blob/main/tickets/delete.php' ?>tickets/delete.php?id=<?= e((string)$r['id']) ?>" onclick="return confirm('¿Borrar?')">Borrar</a>
-  </td>
-</tr>
-<?php endforeach; ?>
-</tbody>
+<a href="<?=/../create.php ?>tickets/create.php">
+    <button>+ Nueva Incidencia</button>
+</a>
+
+<table class="table" role="table" border="1" cellpadding="10" style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php if (count($rows) > 0): ?>
+        <?php foreach($rows as $r): ?>
+        <tr>
+            <td><?= e((string)$r['id']) ?></td>
+            <td><?= e($r['titulo']) ?></td>
+            <td><?= e($r['prioridad']) ?></td>
+            <td><?= e($r['estado']) ?></td>
+            <td>
+                <a href="<?= /../view.php ?>tickets/view.php?id=<?= e((string)$r['id']) ?>">Ver</a> |
+                <a href="<?= /../edit.php ?>tickets/edit.php?id=<?= e((string)$r['id']) ?>">Editar</a> |
+                <a href="<?= /../delete.php ?>tickets/delete.php?id=<?= e((string)$r['id']) ?>" 
+                   onclick="return confirm('¿Estás seguro de borrar esta incidencia?');">Borrar</a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr><td colspan="5">No hay incidencias encontradas.</td></tr>
+    <?php endif; ?>
+    </tbody>
 </table>
-
-<!-- informacion de la paginacion y los enlaces -->
-<div class="small">
-Página <?= e((string)$pager['page']) ?> de <?= e((string)$pager['totalPages']) ?> |
-Total: <?= e((string)$pager['total']) ?>
+<div class="small" style="margin-top: 10px;">
+    Página <?= e((string)$pager['page']) ?> de <?= e((string)$pager['totalPages']) ?> |
+    Total: <?= e((string)$pager['total']) ?>
 </div>
 
-<div>
-<?php for($p=1;$p<=$pager['totalPages'];$p++): ?>
-  <?php if ($p == $pager['page']): ?>
-    <strong><?= $p ?></strong>
-  <?php else: ?>
-    <a href="?q=<?= urlencode($q) ?>&page=<?= $p ?>"><?= $p ?></a>
-  <?php endif; ?>
+<div style="margin-top: 10px;">
+<?php for($p = 1; $p <= $pager['totalPages']; $p++): ?>
+    <?php if ($p == $pager['page']): ?>
+        <strong style="margin-right: 5px;"><?= $p ?></strong>
+    <?php else: ?>
+        <a href="?q=<?= urlencode($q) ?>&page=<?= $p ?>" style="margin-right: 5px;"><?= $p ?></a>
+    <?php endif; ?>
 <?php endfor; ?>
 </div>
 
-<!-- pie de pagina -->
-<?php require_once __DIR__ . '/../templates/footer.php'; ?>

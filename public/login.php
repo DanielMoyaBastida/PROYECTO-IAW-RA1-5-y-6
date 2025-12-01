@@ -1,68 +1,72 @@
 <?php
-require_once __DIR__ . '/../src/functions.php';
+require_once __DIR__ '/../src/functions.php';
 $pdo = getPDO();
 
-// verifica la validez del tokemm csrf
+// Verifica la validez del token CSRF
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
-        set_flash('error','Token CSRF inválido');
-        header('Location: ' . BASE_URL . 'login.php');
+        set_flash('error', 'Token CSRF inválido');
+        header('Location: ../login.php');
         exit;
     }
 
-    // maneja el inicio de sesión del usuario, con diferentes validaciones, 
-    // como que no estén vacíos y comprueba la base de datos
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+    // Recogemos los datos
+    $nombre_usuario = trim($_POST['nombre_usuario'] ?? '');
+    $contrasena = $_POST['contrasena'] ?? '';
 
-    if ($username === '' || $password === '') {
-        set_flash('error','Usuario y contraseña son obligatorios.');
-        header('Location: ' . BASE_URL . 'login.php');
+    if ($nombre_usuario === '' || $contrasena === '') {
+        set_flash('error', 'Usuario y contraseña son obligatorios.');
+        header('Location: ../login.php');
         exit;
     }
 
-    $stmt = $pdo->prepare("SELECT id, username, password_hash FROM users WHERE username = ?");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch();
+  
+    // Seleccionamos de la tabla 'usuarios'
+    $stmt = $pdo->prepare("SELECT id, nombre_usuario, hash_contrasena FROM usuarios WHERE nombre_usuario = ?");
+    $stmt->execute([$nombre_usuario]);
+    $usuario = $stmt->fetch();
 
-    if ($user && password_verify($password, $user['password_hash'])) {
+    // Verificamos la contraseña contra el campo 'hash_contrasena'
+    if ($usuario && password_verify($contrasena, $usuario['hash_contrasena'])) {
         session_regenerate_id(true);
-        $_SESSION['user_id'] = $user['id'];
-        set_flash('success','Bienvenido.');
-        header('Location: ' . BASE_URL . 'tickets/list.php');
+
+        // Guardamos el ID como 'id_usuario' para ser consistentes con la tabla de auditoría
+        $_SESSION['id_usuario'] = $usuario['id'];
+        $_SESSION['nombre_usuario'] = $usuario['nombre_usuario']; 
+
+        set_flash('success', 'Bienvenido.');
+
+        // Redirigir a la lista de tickets
+        header('Location: tickets/list.php'); 
         exit;
     } else {
-        set_flash('error','Credenciales incorrectas.');
-        header('Location: ' . BASE_URL . 'login.php');
+        set_flash('error', 'Credenciales incorrectas.');
+        header('Location: ../login.php');
         exit;
     }
 }
 
-// genera el formulario de inicio de sesión
-require_once __DIR__ . '/../templates/header.php';
+// Genera el formulario de inicio de sesión
+require_once __DIR__ '/../templates/header.php';
 ?>
-<h2>Login</h2>
+<h2>Iniciar Sesión</h2>
+
 <form method="post" action="">
   <?= csrf_field() ?>
-  <label>Usuario<br><input type="text" name="username" value="<?= e($_POST['username'] ?? '') ?>"></label><br>
-  <label>Contraseña<br><input type="password" name="password"></label><br><br>
-  <button type="submit">Entrar</button>
-</form>
-<?php require_once __DIR__ . '/../templates/footer.php'; 
-?>
-
-<h2>Login</h2>
-
-<form method="post">
-  <label>
-    Usuario
-    <input type="text" name="username">
-  </label>
 
   <label>
-    Contraseña
-    <input type="password" name="password">
+    Usuario<br>
+    <input type="text" name="nombre_usuario" value="<?= e($_POST['nombre_usuario'] ?? '') ?>" required>
   </label>
+  <br>
+
+  <label>
+    Contraseña<br>
+    <input type="password" name="contrasena" required>
+  </label>
+  <br><br>
 
   <button type="submit">Entrar</button>
 </form>
+
+<?php require_once __DIR__ '/../templates/footer.php'; ?>
