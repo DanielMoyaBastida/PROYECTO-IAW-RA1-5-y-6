@@ -41,7 +41,7 @@ $rows = $stmt->fetchAll();
 // Cabecera HTML
 require_once '/../templates/header.php';
 ?>
-
+<html>
 <h2>Listado de tickets</h2>
 
 <form method="get" action="">
@@ -99,4 +99,4 @@ require_once '/../templates/header.php';
     <?php endif; ?>
 <?php endfor; ?>
 </div>
-
+</html>

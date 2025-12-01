@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Cabecera HTML
 require_once __DIR__ . '/../templates/header.php';
 ?>
-
+<html>
 <h2>Editar tickets #<?= e((string)$id) ?></h2>
 
 <form method="post" action="">
@@ -120,5 +120,5 @@ require_once __DIR__ . '/../templates/header.php';
   <button type="submit">Guardar Cambios</button> 
   <a href="tickets/list.php" style="margin-left: 10px;">Cancelar</a>
 </form>
-
+</html>
 <?php require_once __DIR__ . '/../templates/footer.php'; ?>

@@ -48,3 +48,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+?>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Incidencia</title>
+    <link rel="stylesheet" href="path/to/your/styles.css">
+</head>
+<body>
+    <h1>Crear Nueva Incidencia</h1>
+
+    <?php if (!empty($errors)): ?>
+        <div class="errors">
+            <ul>
+                <?php foreach ($errors as $error): ?>
+                    <li><?php echo htmlspecialchars($error); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <form action="create.php" method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generate_csrf_token()); ?>">
+
+        <div>
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" name="titulo" value="<?php echo htmlspecialchars($old['titulo']); ?>" required>
+        </div>
+
+        <div>
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" required><?php echo htmlspecialchars($old['descripcion']); ?></textarea>
+        </div>
+
+        <div>
+            <label for="prioridad">Prioridad:</label>
+            <select id="prioridad" name="prioridad">
+                <option value="baja" <?php echo $old['prioridad'] === 'baja' ? 'selected' : ''; ?>>Baja</option>
+                <option value="media" <?php echo $old['prioridad'] === 'media' ? 'selected' : ''; ?>>Media</option>
+                <option value="alta" <?php echo $old['prioridad'] === 'alta' ? 'selected' : ''; ?>>Alta</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="estado">Estado:</label>
+            <select id="estado" name="estado">
+                <option value="abierta" <?php echo $old['estado'] === 'abierta' ? 'selected' : ''; ?>>Abierta</option>
+                <option value="cerrada" <?php echo $old['estado'] === 'cerrada' ? 'selected' : ''; ?>>Cerrada</option>
+            </select>
+        </div>
+
+        <button type="submit">Crear Incidencia</button>
+    </form>
+
+</body>
+</html>

@@ -55,3 +55,44 @@ catch (Exception $ex) {
     header('Location: /list.php');
     exit;
 }
+?>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Eliminación</title>
+    <link rel="stylesheet" href="path/to/your/styles.css">
+</head>
+<body>
+    <h1>¿Estás seguro de que quieres eliminar esta incidencia?</h1>
+
+    <?php 
+    // Obtener la incidencia
+    $id = (int)($_GET['id'] ?? 0);
+    $pdo = getPDO();
+    $stmt = $pdo->prepare("SELECT * FROM tickets WHERE id = ?");
+    $stmt->execute([$id]);
+    $ticket = $stmt->fetch();
+
+    if (!$ticket) {
+        set_flash('error', 'Incidencia no encontrada');
+        header('Location: /list.php');
+        exit;
+    }
+    ?>
+
+    <div>
+        <p><strong>Título:</strong> <?php echo htmlspecialchars($ticket['titulo']); ?></p>
+        <p><strong>Prioridad:</strong> <?php echo htmlspecialchars($ticket['prioridad']); ?></p>
+        <p><strong>Estado:</strong> <?php echo htmlspecialchars($ticket['estado']); ?></p>
+    </div>
+
+    <p>Al confirmar, la incidencia será eliminada</p>
+
+    <form action="delete.php?id=<?php echo htmlspecialchars($ticket['id']); ?>" method="POST">
+        <button type="submit">Confirmar Eliminación</button>
+        <a href="/list.php" class="cancel-link">Cancelar</a>
+    </form>
+
+</body>
+</html>
