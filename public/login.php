@@ -5,7 +5,6 @@ $pdo = getPDO();
 // Verifica la validez del token CSRF
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
-        set_flash('error', 'Token CSRF inválido');
         header('Location: ../login.php');
         exit;
     }
@@ -16,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($nombre_usuario === '' || $contrasena === '') {
         set_flash('error', 'Usuario y contraseña son obligatorios.');
-        header('Location: ../login.php');
+        header('Location: /login.php');
         exit;
     }
 
@@ -34,14 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['id_usuario'] = $usuario['id'];
         $_SESSION['nombre_usuario'] = $usuario['nombre_usuario']; 
 
-        set_flash('success', 'Bienvenido.');
-
         // Redirigir a la lista de tickets
         header('Location: tickets/list.php'); 
         exit;
     } else {
         set_flash('error', 'Credenciales incorrectas.');
-        header('Location: ../login.php');
+        header('Location: /login.php');
         exit;
     }
 }

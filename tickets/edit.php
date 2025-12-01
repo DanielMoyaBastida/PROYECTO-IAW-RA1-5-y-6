@@ -8,7 +8,7 @@ $pdo = getPDO();
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) {
     set_flash('error', 'ID inválido');
-    header('Location: ../list.php');
+    header('Location: /list.php');
     exit;
 }
 
@@ -20,7 +20,7 @@ $tickets = $stmt->fetch();
 // Si no existe se notifica y se redirige
 if (!$tickets) {
     set_flash('error', 'incidencia no encontrada');
-    header('Location:../list.php');
+    header('Location: /list.php');
     exit;
 }
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
         set_flash('error', 'Token CSRF inválido');
         // Redirigir a la misma página para evitar bucles raros
-        header('Location:../edit.php?id=' . $id);
+        header('Location: /edit.php?id=' . $id);
         exit;
     }
 
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         set_flash('success', 'tickets actualizada correctamente');
         // Redirigir a la vista de detalle
-        header('Location: ../view.php?id=' . $id);
+        header('Location: /view.php?id=' . $id);
         exit;
     }
 }

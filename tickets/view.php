@@ -19,7 +19,7 @@ if (!$tickets) {
     }
 
     // Redirección usando BASE_URL para evitar errores de ruta
-    header('Location: ../list.php');
+    header('Location: /list.php');
     exit;
 }
 

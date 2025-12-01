@@ -10,7 +10,7 @@ $pdo = getPDO();
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) {
     set_flash('error','ID inválido');
-    header('Location: ../list.php');
+    header('Location: /list.php');
     exit;
 }
 
@@ -25,7 +25,7 @@ try {
     if (!$tickets) {
         $pdo->rollBack();
         set_flash('error','Incidencia no encontrada');
-        header('Location: ../list.php');
+        header('Location: /list.php');
         exit;
     }
 
@@ -43,7 +43,7 @@ try {
     //confirmamos los cambios
     $pdo->commit();
     set_flash('success','Incidencia borrada correctamente (auditoría registrada).');
-    header('Location: ../tickets/list.php');
+    header('Location: /list.php');
     exit;
 } 
 catch (Exception $ex) {
@@ -52,6 +52,6 @@ catch (Exception $ex) {
     //y se registra el error en el log
     error_log('Error borrado: ' . $ex->getMessage());
     set_flash('error','Error al borrar (se ha revertido).');
-    header('Location: ../tickets/list.php');
+    header('Location: /list.php');
     exit;
 }

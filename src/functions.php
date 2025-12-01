@@ -13,7 +13,7 @@ function require_login(): void {
   
     if (!isset($_SESSION['id_usuario'])) {
         // Usamos BASE_URL para una redirección más segura
-        header('Location: ../login.php');
+        header('Location: ../public/login.php');
         exit;
     }
 }

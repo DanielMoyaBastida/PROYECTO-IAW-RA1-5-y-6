@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
         set_flash('error', 'Token CSRF inválido');
         // Redirección interna correcta
-        header('Location: ../tickets/create.php');
+        header('Location: /create.php');
         exit;
     }
 // Recogemos los datos del formulario
