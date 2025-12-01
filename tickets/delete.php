@@ -61,7 +61,6 @@ catch (Exception $ex) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmar Eliminación</title>
-    <link rel="stylesheet" href="path/to/your/styles.css">
 </head>
 <body>
     <h1>¿Estás seguro de que quieres eliminar esta incidencia?</h1>
