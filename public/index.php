@@ -10,7 +10,7 @@ exit;
     <h1>Pulsa el enlace para ir al login</h1>
     <button>
         <a href="public/login.php">
-        Ir a list
+        Ir a login
         </a>
     </button>
 </body>

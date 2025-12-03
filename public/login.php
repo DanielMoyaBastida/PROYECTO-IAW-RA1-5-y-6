@@ -54,7 +54,7 @@ require_once  __DIR__ .'/../templates/header.php';
 
   <label>
     Usuario<br>
-    <input type="text" name="nombre_usuario" value="<?= e($_POST['nombre_usuario'] ?? '') ?>" required>
+    <input type="text" name="nombre_usuario" value="<?= 'nombre_usuario' ?>" required>
   </label>
   <br>
 
