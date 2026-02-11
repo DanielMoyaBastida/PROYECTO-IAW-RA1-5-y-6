@@ -1,70 +1,50 @@
 <?php
-require_once __DIR__ .  '/../src/functions.php';
-$pdo = getPDO();
+ini_set('display_errors',1);
+error_reporting(E_ALL);
 
-// Verifica la validez del token CSRF
+require_once __DIR__ . '/../app/pdo.php';
+require_once __DIR__ . '/../app/auth.php';
+require_once __DIR__ . '/../app/csrf.php';
+require_once __DIR__ . '/../app/utils.php';
+
+$error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
-        header('Location: login.php');
-        exit;
-    }
-
-    // Recogemos los datos
-    $nombre_usuario = trim($_POST['nombre_usuario'] ?? '');
-    $contrasena = $_POST['contrasena'] ?? '';
-
-    if ($nombre_usuario === '' || $contrasena === '') {
-        set_flash('error', 'Usuario y contraseña son obligatorios.');
-        header('Location: login.php');
-        exit;
-    }
-
-  
-    // Seleccionamos de la tabla 'usuarios'
-    $stmt = $pdo->prepare("SELECT id, nombre_usuario, hash_contrasena FROM usuarios WHERE nombre_usuario = ?");
-    $stmt->execute([$nombre_usuario]);
-    $usuario = $stmt->fetch();
-
-    // Verificamos la contraseña contra el campo 'hash_contrasena'
-    if ($usuario && password_verify($contrasena, $usuario['hash_contrasena'])) {
-        session_regenerate_id(true);
-
-        // Guardamos el ID como 'id_usuario' para ser consistentes con la tabla de auditoría
-        $_SESSION['id_usuario'] = $usuario['id'];
-        $_SESSION['nombre_usuario'] = $usuario['nombre_usuario']; 
-
-        // Redirigir a la lista de tickets
-        header('Location: ../tickets/list.php'); 
-        exit;
+    if (!check_csrf($_POST['csrf'] ?? '')) {
+        $error = 'CSRF token inválido';
     } else {
-        set_flash('error', 'Credenciales incorrectas.');
-        header('Location: login.php');
-        exit;
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->execute([$_POST['username'] ?? '']);
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($_POST['password'] ?? '', $user['password'])) {
+            $_SESSION['user'] = $user['username'];
+            header('Location: index.php');
+            exit;
+        } else {
+            $error = "Usuario o contraseña incorrecta";
+        }
     }
 }
-
-// Genera el formulario de inicio de sesión
-require_once  __DIR__ .'/../templates/header.php';
 ?>
-<html>
-<h2>Iniciar Sesión</h2>
-
-<form method="post" action="">
-  <?= csrf_field() ?>
-
-  <label>
-    Usuario<br>
-    <input type="text" name="nombre_usuario" value="<?= 'nombre_usuario' ?>" required>
-  </label>
-  <br>
-
-  <label>
-    Contraseña<br>
-    <input type="password" name="contrasena" required>
-  </label>
-  <br><br>
-
-  <button type="submit">Entrar</button>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-light">
+<div class="container">
+<h1>Iniciar sesión</h1>
+<?php if($error): ?>
+<p class="error"><?= e($error) ?></p>
+<?php endif; ?>
+<form method="post">
+<input type="hidden" name="csrf" value="<?= csrf_token() ?>">
+<input type="text" name="username" placeholder="Usuario" value="<?= e(old('username')) ?>"><br><br>
+<input type="password" name="password" placeholder="Contraseña"><br><br>
+<button type="submit">Entrar</button>
 </form>
+</div>
+</body>
 </html>
-<?php require_once  '/../templates/footer.php'; ?>

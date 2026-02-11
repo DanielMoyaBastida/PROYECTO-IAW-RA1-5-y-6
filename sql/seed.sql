@@ -1,58 +1,9 @@
-USE gestor_inc;
+USE incidencias;
 
-INSERT INTO usuarios (nombre_usuario, hash_contrasena) VALUES
-('root', '$2y$10$J0swe...'),
-('soporte_juan', '$2y$10$EjemploHashJuan123'),
-('admin_ana', '$2y$10$EjemploHashAna456');
+INSERT INTO users (username, password) VALUES
+('admin', 'admin123');
 
-INSERT INTO tickets (titulo, descripcion, prioridad, estado) VALUES
-('Incidencia 1', 'Fallo de conexión en la red principal', 'baja', 'abierta'),
-('Incidencia 2', 'Pantalla azul en equipo de contabilidad', 'media', 'abierta'),
-('Incidencia 3', 'Servidor de correo caído', 'alta', 'cerrada'),
-('Incidencia 4', 'Solicitud de licencia de software', 'media', 'abierta'),
-('Incidencia 5', 'Ratón no funciona', 'baja', 'cerrada'),
-('Incidencia 6', 'Brecha de seguridad detectada', 'alta', 'abierta'),
-('Incidencia 7', 'Actualización de Windows pendiente', 'baja', 'abierta'),
-('Incidencia 8', 'Impresora sin tóner', 'media', 'cerrada'),
-('Incidencia 9', 'Base de datos no responde', 'alta', 'abierta'),
-('Incidencia 10', 'Lentitud en el CRM', 'media', 'abierta'),
-('Incidencia 11', 'Cambio de teclado solicitado', 'baja', 'abierta'),
-('Incidencia 12', 'Fallo crítico en API de pagos', 'alta', 'cerrada'),
-('Incidencia 13', 'Usuario bloqueado en dominio', 'media', 'abierta'),
-('Incidencia 14', 'Instalación de monitor secundario', 'baja', 'abierta'),
-('Incidencia 15', 'Disco duro del servidor lleno', 'alta', 'abierta'),
-('Incidencia 16', 'Error al exportar PDF', 'media', 'cerrada'),
-('Incidencia 17', 'Solicitud de acceso a carpeta compartida', 'baja', 'abierta'),
-('Incidencia 18', 'Problemas de sincronización en la nube', 'media', 'abierta'),
-('Incidencia 19', 'Ataque DDoS en curso', 'alta', 'cerrada'),
-('Incidencia 20', 'Ruido extraño en ventilador de PC', 'baja', 'abierta'),
-('Incidencia 21', 'VPN no conecta', 'media', 'abierta'),
-('Incidencia 22', 'Pérdida de datos en backup', 'alta', 'abierta'),
-('Incidencia 23', 'Limpieza de temporales', 'baja', 'cerrada'),
-('Incidencia 24', 'Error 404 en página interna', 'media', 'abierta'),
-('Incidencia 25', 'Firewall bloqueando tráfico legítimo', 'alta', 'abierta'),
-('Incidencia 26', 'Configuración de firma de correo', 'baja', 'abierta'),
-('Incidencia 27', 'Reinicio inesperado del servidor', 'media', 'cerrada'),
-('Incidencia 28', 'Fallo en sistema de fichar', 'alta', 'abierta'),
-('Incidencia 29', 'Cable de red dañado', 'baja', 'abierta'),
-('Incidencia 30', 'Error de certificado SSL', 'media', 'cerrada'),
-('Incidencia 31', 'Robo de credenciales reportado', 'alta', 'abierta'),
-('Incidencia 32', 'Solicitud de auriculares nuevos', 'baja', 'abierta'),
-('Incidencia 33', 'Problema con videollamadas', 'media', 'abierta'),
-('Incidencia 34', 'Ransomware detectado en equipo local', 'alta', 'cerrada'),
-('Incidencia 35', 'Luz parpadeante en la oficina', 'baja', 'abierta'),
-('Incidencia 36', 'No llegan correos externos', 'media', 'abierta'),
-('Incidencia 37', 'Sistema de nóminas inaccesible', 'alta', 'abierta'),
-('Incidencia 38', 'Iconos del escritorio desaparecidos', 'baja', 'cerrada'),
-('Incidencia 39', 'Error de drivers de gráfica', 'media', 'abierta'),
-('Incidencia 40', 'Caída del enlace de fibra óptica', 'alta', 'abierta'),
-('Incidencia 41', 'Duda sobre uso de Excel', 'baja', 'abierta'),
-('Incidencia 42', 'Duplicidad de registros en BD', 'media', 'cerrada'),
-('Incidencia 43', 'Acceso no autorizado a sala de servidores', 'alta', 'abierta'),
-('Incidencia 44', 'Silla de oficina rota', 'baja', 'abierta'),
-('Incidencia 45', 'WiFi lento en sala de juntas', 'media', 'abierta'),
-('Incidencia 46', 'Fallo eléctrico en el CPD', 'alta', 'cerrada'),
-('Incidencia 47', 'Organización de cables', 'baja', 'abierta'),
-('Incidencia 48', 'Proyector no enciende', 'media', 'abierta'),
-('Incidencia 49', 'Filtración de datos confidenciales', 'alta', 'abierta'),
-('Incidencia 50', 'Actualización de antivirus manual', 'baja', 'abierta');
+INSERT INTO incidencias (titulo, descripcion, prioridad, estado) VALUES
+('Fallo de login','No se puede iniciar sesión','alta','abierta'),
+('Error en página','Página 404 aparece al cargar','media','abierta'),
+('Impresora no funciona','Impresora oficina central','baja','cerrada');

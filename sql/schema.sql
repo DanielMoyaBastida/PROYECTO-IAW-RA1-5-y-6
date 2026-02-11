@@ -1,30 +1,24 @@
-CREATE DATABASE IF NOT EXISTS gestor_inc;
-USE gestor_inc;
+CREATE DATABASE IF NOT EXISTS incidencias CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE incidencias;
 
-CREATE TABLE IF NOT EXISTS usuarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nombre_usuario VARCHAR(100) NOT NULL UNIQUE,
-  hash_contrasena VARCHAR(255) NOT NULL
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS tickets (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  titulo VARCHAR(255) NOT NULL,
-  descripcion TEXT NOT NULL,
-  prioridad ENUM('baja','media','alta') NOT NULL DEFAULT 'media',
-  estado ENUM('abierta','cerrada') NOT NULL DEFAULT 'abierta'
+CREATE TABLE items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    descripcion TEXT NOT NULL,
+    prioridad ENUM('baja','media','alta') DEFAULT 'media',
+    estado ENUM('abierta','cerrada') DEFAULT 'abierta',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS registros_auditoria (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  accion VARCHAR(50) NOT NULL,
-  entidad VARCHAR(50) NOT NULL,
-  id_entidad INT,
-  id_usuario INT,
-  detalles JSON,
-  CONSTRAINT fk_auditoria_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+CREATE TABLE auditoria (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    accion VARCHAR(50) NOT NULL,
+    item_id INT NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE INDEX idx_tickets_titulo ON tickets(titulo); 
-CREATE INDEX idx_tickets_prioridad ON tickets(prioridad);
-CREATE INDEX idx_tickets_estado ON tickets(estado);
